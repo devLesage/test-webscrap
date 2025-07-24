@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Webscrapp AMD Processadores</title>
+  <link rel="stylesheet" href="/public/style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Processadores AMD - Melhores Preços</h1>
+    <form id="filtroForm">
+      <input type="text" id="filtro" placeholder="Filtrar por nome (ex: Ryzen 5)">
+      <button type="submit">Buscar</button>
+    </form>
+    <ul id="lista"></ul>
+    <div class="paginacao">
+      <button id="anterior">Anterior</button>
+      <span id="paginaAtual">1</span>
+      <button id="proximo">Próximo</button>
+    </div>
+  </div>
+  <script>
+    let pagina = 1;
+    let filtro = '';
+    const lista = document.getElementById('lista');
+    const paginaAtual = document.getElementById('paginaAtual');
+
+    async function buscar() {
+      lista.innerHTML = '<li>Carregando...</li>';
+      const res = await fetch(`/api/amd?page=${pagina}&filter=${encodeURIComponent(filtro)}`);
+      const data = await res.json();
+      lista.innerHTML = '';
+      if (data.length === 0) {
+        lista.innerHTML = '<li>Nenhum resultado encontrado.</li>';
+        return;
+      }
+      data.forEach(item => {
+        const li = document.createElement('li');
+        li.innerHTML = `<a href="${item.link}" target="_blank">${item.nome}</a> <span>${item.preco}</span>`;
+        lista.appendChild(li);
+      });
+      paginaAtual.textContent = pagina;
+    }
+
+    document.getElementById('filtroForm').onsubmit = e => {
+      e.preventDefault();
+      filtro = document.getElementById('filtro').value;
+      pagina = 1;
+      buscar();
+    };
+    document.getElementById('anterior').onclick = () => {
+      if (pagina > 1) { pagina--; buscar(); }
+    };
+    document.getElementById('proximo').onclick = () => {
+      pagina++; buscar();
+    };
+
+    buscar();
+  </script>
+</body>
+</html>
