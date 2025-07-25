@@ -2,8 +2,11 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Webscrapp AMD Processadores</title>
-  <link rel="stylesheet" href="/public/style.css">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="icon" href="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amd/amd-original.svg">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
   <div class="container">
@@ -56,6 +59,29 @@
     };
 
     buscar();
+  </script>
+
+  <script>
+    async function buscar() {
+  lista.innerHTML = '<li>Carregando...</li>';
+  try {
+    const res = await fetch(`/api/amd?page=${pagina}&filter=${encodeURIComponent(filtro)}`);
+    const data = await res.json();
+    lista.innerHTML = '';
+    if (data.length === 0) {
+      lista.innerHTML = '<li>Nenhum resultado encontrado.</li>';
+      return;
+    }
+    data.forEach(item => {
+      const li = document.createElement('li');
+      li.innerHTML = `<a href="${item.link}" target="_blank">${item.nome}</a> <span>${item.preco}</span>`;
+      lista.appendChild(li);
+    });
+    paginaAtual.textContent = pagina;
+  } catch (e) {
+    lista.innerHTML = '<li>Erro ao buscar dados. Tente novamente mais tarde.</li>';
+  }
+}
   </script>
 </body>
 </html>

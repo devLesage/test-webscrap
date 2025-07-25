@@ -8,7 +8,8 @@ module.exports = async (req, res) => {
     const { data } = await axios.get(url, {
       headers: { 'User-Agent': 'Mozilla/5.0' }
     });
-    // data.products pode ser o array de produtos
+
+
     const produtos = (data.products || [])
       .filter(prod => 
         prod.name.toLowerCase().includes('amd') && 
