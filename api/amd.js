@@ -2,7 +2,7 @@ const axios = require('axios');
 
 module.exports = async (req, res) => {
   const { page = 1, filter = '' } = req.query;
-  const url = `https://www.kabum.com.br/hardware/processadores/amd/json?page_number=${page}&page_size=20&facet_filters=&sort=most_searched`;
+  const url = `https://www.kabum.com.br/hardware/processador-amd?page_number=${page}&page_size=20&facet_filters=&sort=most_searched`;
 
   try {
     const { data } = await axios.get(url, {
